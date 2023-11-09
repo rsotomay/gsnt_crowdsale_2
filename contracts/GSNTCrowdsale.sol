@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "./Token.sol";
 
-contract Crowdsale {
+contract Gsntcrowdsale {
     address public owner;
     Token public token;
     uint256 public price;
