@@ -19,6 +19,7 @@ import config from "../config.json";
 
 function App() {
   const [provider, setProvider] = useState(null);
+  const [token, setToken] = useState(null);
   const [gsntcrowdsale, setGsntcrowdsale] = useState(null);
 
   const [account, setAccount] = useState(null);
@@ -46,6 +47,7 @@ function App() {
       TOKEN_ABI,
       provider
     );
+    setToken(token);
 
     const gsntcrowdsale = new ethers.Contract(
       config[network.chainId].gsntcrowdsale.address,
@@ -53,20 +55,6 @@ function App() {
       provider
     );
     setGsntcrowdsale(gsntcrowdsale);
-
-    // fetch accounts
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-    // Add to state
-    const account = ethers.getAddress(accounts[0]);
-    setAccount(account);
-
-    //fetch account balance
-    const accountBalance = ethers.formatUnits(
-      await token.balanceOf(account),
-      18
-    );
 
     //Fetch Countdown to crowdsaleOpened
     const crowdsaleOpens = await gsntcrowdsale.crowdsaleOpened();
@@ -76,7 +64,6 @@ function App() {
     const crowdsaleCloses = await gsntcrowdsale.crowdsaleClosed();
     setRevealTimeCloses(crowdsaleCloses.toString() + "000");
 
-    setAccountBalance(accountBalance);
     // Fetch price
     const price = ethers.formatUnits(await gsntcrowdsale.price(), 18);
     setPrice(price);
@@ -101,6 +88,7 @@ function App() {
       <Navigation
         account={account}
         setAccount={setAccount}
+        token={token}
         gsntcrowdsale={gsntcrowdsale}
         accountBalance={accountBalance}
         setAccountBalance={setAccountBalance}
