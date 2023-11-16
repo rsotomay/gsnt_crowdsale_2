@@ -59,6 +59,11 @@ function App() {
     );
     setGsntcrowdsale(gsntcrowdsale);
 
+    // Fetch current account from Metamask when changed
+    window.ethereum.on("accountsChanged", async () => {
+      setAccount(account);
+    });
+
     setOwner(await gsntcrowdsale.owner());
 
     //Fetch Countdown to crowdsaleOpened
@@ -137,6 +142,7 @@ function App() {
             price={price}
             gsntcrowdsale={gsntcrowdsale}
             setIsLoading={setIsLoading}
+            account={account}
           />
           <Progress maxTokens={maxTokens} tokensSold={tokensSold} />
         </>

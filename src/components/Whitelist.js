@@ -17,6 +17,11 @@ const Whitelist = ({
 
   const addToWhitelistHandler = async (e) => {
     e.preventDefault();
+
+    if (!addressToAdd) {
+      window.alert("Add the address you wish to add to whitelist");
+      return;
+    }
     setIsWaiting(true);
 
     try {
@@ -25,10 +30,9 @@ const Whitelist = ({
         .connect(signer)
         .addToWhitelist(addressToAdd);
       await transaction.wait();
+      window.location.reload();
     } catch {
-      if (!addressToAdd) {
-        window.alert("Add the address you wish to add to whitelist");
-      }
+      window.alert("User rejected or transaction reverted");
     }
 
     setIsLoading(true);
