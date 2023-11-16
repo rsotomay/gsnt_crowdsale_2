@@ -5,7 +5,13 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Spinner from "react-bootstrap/Spinner";
 
-const Whitelist = ({ provider, crowdsale, setIsLoading }) => {
+const Whitelist = ({
+  provider,
+  account,
+  gsntcrowdsale,
+  setIsLoading,
+  owner,
+}) => {
   const [isWaiting, setIsWaiting] = useState(false);
   const [addressToAdd, setAddressToAdd] = useState("");
 
@@ -15,12 +21,14 @@ const Whitelist = ({ provider, crowdsale, setIsLoading }) => {
 
     try {
       const signer = await provider.getSigner();
-      const transaction = await crowdsale
+      const transaction = await gsntcrowdsale
         .connect(signer)
         .addToWhitelist(addressToAdd);
       await transaction.wait();
     } catch {
-      window.alert("You are not in the whitelist to buy tokens.");
+      if (!addressToAdd) {
+        window.alert("Add the address you wish to add to whitelist");
+      }
     }
 
     setIsLoading(true);
@@ -31,11 +39,13 @@ const Whitelist = ({ provider, crowdsale, setIsLoading }) => {
       style={{ maxWidth: "800px", margin: "50px auto" }}
     >
       {isWaiting ? (
-        <Spinner
-          animation="border"
-          style={{ display: "block", margin: "0 auto" }}
-        />
-      ) : (
+        <>
+          <Spinner
+            animation="border"
+            style={{ display: "block", margin: "0 auto" }}
+          />
+        </>
+      ) : account === owner ? (
         <Form.Group className="text-center" as={Row}>
           <Col>
             <Form.Control
@@ -50,6 +60,8 @@ const Whitelist = ({ provider, crowdsale, setIsLoading }) => {
             </Button>
           </Col>
         </Form.Group>
+      ) : (
+        <></>
       )}
     </Form>
   );

@@ -8,7 +8,6 @@ const Navigation = ({
   account,
   setAccount,
   token,
-  gsntcrowdsale,
   accountBalance,
   setAccountBalance,
 }) => {
@@ -54,12 +53,12 @@ const Navigation = ({
           </Navbar.Text>
         ) : (
           <Button
-            variant="secondary"
-            style={{ fontSize: 20, width: "30%", margin: "3px" }}
+            variant="dark"
+            style={{ fontSize: 20, width: "20%", margin: "3px" }}
             className="d-inline-block align-top mx-5"
             onClick={connectHandler}
           >
-            Connect Your Wallet
+            Connect Wallet
           </Button>
         )}
       </Navbar.Collapse>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import Countdown from "react-countdown";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import { ethers } from "ethers";
 
 //components
@@ -21,6 +23,7 @@ function App() {
   const [provider, setProvider] = useState(null);
   const [token, setToken] = useState(null);
   const [gsntcrowdsale, setGsntcrowdsale] = useState(null);
+  const [owner, setOwner] = useState(null);
 
   const [account, setAccount] = useState(null);
   const [revealTimeOpens, setRevealTimeOpens] = useState(0);
@@ -56,6 +59,8 @@ function App() {
     );
     setGsntcrowdsale(gsntcrowdsale);
 
+    setOwner(await gsntcrowdsale.owner());
+
     //Fetch Countdown to crowdsaleOpened
     const crowdsaleOpens = await gsntcrowdsale.crowdsaleOpened();
     setRevealTimeOpens(crowdsaleOpens.toString() + "000");
@@ -89,7 +94,6 @@ function App() {
         account={account}
         setAccount={setAccount}
         token={token}
-        gsntcrowdsale={gsntcrowdsale}
         accountBalance={accountBalance}
         setAccountBalance={setAccountBalance}
       />
@@ -100,25 +104,33 @@ function App() {
         <Loading />
       ) : (
         <>
-          <p className="my-1 text-center">
-            <strong>Token Sale Starts In:</strong>
-          </p>
-          <div className="my-1 text-center">
-            <Countdown date={parseInt(revealTimeOpens)} className="h4" />
-          </div>
-          <p className="my-1 text-center">
-            <strong>Time left to buy:</strong>
-          </p>
-          <div className="my-1 text-center">
-            <Countdown date={parseInt(revealTimeCloses)} className="h4" />
-          </div>
+          <Row className="justify-content-md-center">
+            <Col xs={2}>
+              <p className="my-1 text-center">
+                <strong>Token Sale Starts In:</strong>
+              </p>
+              <div className="my-1 text-center">
+                <Countdown date={parseInt(revealTimeOpens)} className="h4" />
+              </div>
+            </Col>
+            <Col xs={2}>
+              <p className="my-1 text-center">
+                <strong>Time left to buy:</strong>
+              </p>
+              <div className="my-1 text-center">
+                <Countdown date={parseInt(revealTimeCloses)} className="h4" />
+              </div>
+            </Col>
+          </Row>
           <p className="my-3 text-center">
             <strong>Current Price:</strong> {price} ETH
           </p>
           <Whitelist
             provider={provider}
+            account={account}
             gsntcrowdsale={gsntcrowdsale}
             setIsLoading={setIsLoading}
+            owner={owner}
           />
           <Buy
             provider={provider}
