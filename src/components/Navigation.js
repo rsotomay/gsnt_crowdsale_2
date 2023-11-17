@@ -4,13 +4,7 @@ import Button from "react-bootstrap/Button";
 
 import logo from "../logo_GSNT.png";
 
-const Navigation = ({
-  account,
-  setAccount,
-  token,
-  accountBalance,
-  setAccountBalance,
-}) => {
+const Navigation = ({ account, setAccount, token, setAccountBalance }) => {
   const connectHandler = async () => {
     // fetch accounts
     const accounts = await window.ethereum.request({
@@ -46,10 +40,6 @@ const Navigation = ({
             style={{ color: "black", fontSize: 20 }}
           >
             {account.slice(0, 5) + "..." + account.slice(38, 42)}
-            <p className="my-1">
-              <strong className="mx-1">Tokens:</strong>
-              {accountBalance.toString()}
-            </p>
           </Navbar.Text>
         ) : (
           <Button

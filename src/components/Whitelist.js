@@ -30,6 +30,7 @@ const Whitelist = ({
         .connect(signer)
         .addToWhitelist(addressToAdd);
       await transaction.wait();
+      window.alert("Address has been added to whitlist");
       window.location.reload();
     } catch {
       window.alert("User rejected or transaction reverted");

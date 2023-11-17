@@ -143,6 +143,7 @@ function App() {
             gsntcrowdsale={gsntcrowdsale}
             setIsLoading={setIsLoading}
             account={account}
+            accountBalance={accountBalance}
           />
           <Progress maxTokens={maxTokens} tokensSold={tokensSold} />
         </>

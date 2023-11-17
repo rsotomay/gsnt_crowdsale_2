@@ -6,7 +6,16 @@ import Col from "react-bootstrap/Col";
 import Spinner from "react-bootstrap/Spinner";
 import { ethers } from "ethers";
 
-const Buy = ({ provider, price, gsntcrowdsale, setIsLoading, account }) => {
+import Info from "./Info";
+
+const Buy = ({
+  provider,
+  price,
+  gsntcrowdsale,
+  setIsLoading,
+  account,
+  accountBalance,
+}) => {
   const [amount, setAmount] = useState("0");
   const [isWaiting, setIsWaiting] = useState(false);
 
@@ -54,6 +63,7 @@ const Buy = ({ provider, price, gsntcrowdsale, setIsLoading, account }) => {
             placeholder="Enter amount"
             onChange={(e) => setAmount(e.target.value)}
           />
+          {account && <Info accountBalance={accountBalance} />}
         </Col>
         <Col className="text-center">
           {isWaiting ? (
