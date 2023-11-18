@@ -11,6 +11,7 @@ import Loading from "./Loading";
 import Progress from "./Progress";
 import Whitelist from "./Whitelist";
 import Buy from "./Buy";
+import Finalize from "./Finalize";
 
 //Abis
 import TOKEN_ABI from "../abis/Token.json";
@@ -29,6 +30,7 @@ function App() {
   const [revealTimeOpens, setRevealTimeOpens] = useState(0);
   const [revealTimeCloses, setRevealTimeCloses] = useState(0);
   const [accountBalance, setAccountBalance] = useState(0);
+  const [contractBalance, setContractBalance] = useState(0);
 
   const [price, setPrice] = useState(0);
   const [maxTokens, setMaxTokens] = useState(0);
@@ -66,6 +68,12 @@ function App() {
 
     setOwner(await gsntcrowdsale.owner());
 
+    const contractBalance = ethers.formatUnits(
+      await provider.getBalance(gsntcrowdsale.getAddress()),
+      18
+    );
+    setContractBalance(contractBalance);
+
     //Fetch Countdown to crowdsaleOpened
     const crowdsaleOpens = await gsntcrowdsale.crowdsaleOpened();
     setRevealTimeOpens(crowdsaleOpens.toString() + "000");
@@ -101,6 +109,13 @@ function App() {
         token={token}
         accountBalance={accountBalance}
         setAccountBalance={setAccountBalance}
+      />
+      <Finalize
+        provider={provider}
+        account={account}
+        owner={owner}
+        gsntcrowdsale={gsntcrowdsale}
+        contractBalance={contractBalance}
       />
 
       <h1 className="my-4 text-center">Introducing The GASton Token!</h1>

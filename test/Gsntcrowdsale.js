@@ -255,27 +255,42 @@ describe("Gsntcrowdsale", () => {
           .connect(user1)
           .buyTokens(amount, { value: value });
         result = await transaction.wait();
-
-        transaction = await gsntcrowdsale.connect(deployer).finalize();
-        result = await transaction.wait();
       });
 
       it("transfers remaining tokens to owner", async () => {
-        // let now = await time.latest();
-        // let crowdsaleClosed = now + 1000;
-        // await time.increaseTo(crowdsaleClosed + 1);
+        let now = await time.latest();
+        let crowdsaleClosed = now + 1000;
+        await time.increaseTo(crowdsaleClosed + 1);
+
+        transaction = await gsntcrowdsale.connect(deployer).finalize();
+        result = await transaction.wait();
+
         expect(await token.balanceOf(gsntcrowdsale.getAddress())).to.equal(0);
         expect(await token.balanceOf(deployer.getAddress())).to.equal(
           tokens(999990)
         );
       });
       it("transfers ETH balance to owner", async () => {
+        let now = await time.latest();
+        let crowdsaleClosed = now + 1000;
+        await time.increaseTo(crowdsaleClosed + 1);
+
+        transaction = await gsntcrowdsale.connect(deployer).finalize();
+        result = await transaction.wait();
+
         expect(
           await ethers.provider.getBalance(gsntcrowdsale.getAddress())
-        ).to.equal(0);
+        ).to.equal(ether(0));
       });
 
       it("emits a fanilize event", async () => {
+        let now = await time.latest();
+        let crowdsaleClosed = now + 1000;
+        await time.increaseTo(crowdsaleClosed + 1);
+
+        transaction = await gsntcrowdsale.connect(deployer).finalize();
+        result = await transaction.wait();
+
         await expect(transaction)
           .to.emit(gsntcrowdsale, "Finalize")
           .withArgs(amount, value);
@@ -289,8 +304,9 @@ describe("Gsntcrowdsale", () => {
 
       it("reject finalizing if crowdsale is open", async () => {
         let now = await time.latest();
-        let crowdsaleClosed = now + 1000;
-        await time.increaseTo(crowdsaleClosed - 1);
+        let crowdsaleOpened = now + 300;
+        await time.increaseTo(crowdsaleOpened + 1);
+
         await expect(gsntcrowdsale.connect(deployer).finalize()).to.be.reverted;
       });
     });

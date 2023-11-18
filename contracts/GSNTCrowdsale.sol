@@ -76,7 +76,7 @@ contract Gsntcrowdsale {
     }
 
     function finalize() public onlyOwner {
-        require(crowdsaleClosed > block.timestamp , "Crowdsale has not ended yet");
+        require(block.timestamp > crowdsaleClosed, "Crowdsale has not ended yet");
         //Send remaining tokens to crowdsale creator
         require(token.transfer(owner, token.balanceOf(address(this))));
         //Send Ether to crowdsale creator
