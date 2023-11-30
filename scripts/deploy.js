@@ -13,9 +13,9 @@ async function main() {
   const PRICE = ethers.parseUnits("0.025", "ether");
   const MIN_PURCHASE = ethers.parseUnits("10", "ether");
   const MAX_PURCHASE = ethers.parseUnits("20000", "ether");
-  const CROWD_SALE_OPENED = (Date.now() + 180000).toString().slice(0, 10);
-  const CROWD_SALE_CLOSED = (Date.now() + 1800000).toString().slice(0, 10);
-  const GOAL = ethers.parseUnits("100000", "ether");
+  const CROWD_SALE_OPENED = (Date.now() + 120000).toString().slice(0, 10);
+  const CROWD_SALE_CLOSED = (Date.now() + 300000).toString().slice(0, 10);
+  const GOAL = ethers.parseUnits("90000", "ether");
 
   // Deploy Token Contract
   const Token = await hre.ethers.deployContract("Token", [

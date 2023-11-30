@@ -101,20 +101,19 @@ contract Gsntcrowdsale {
 
     function finalize() public onlyOwner {
         require(block.timestamp > crowdsaleClosed, "Crowdsale has not ended yet");
-        // If goal is not met, refund ether to token holders and transfer tokens 
-        //back to the contract
-        if (goal > tokensSold) {
-            _refund();
-        } else {
-        require(goal <= tokensSold, 'Crowdsale goal has not been met');
-        //Send remaining tokens to crowdsale creator
+        // If goal is not met, refund ether to token holders.
+        if (tokensSold > goal) {
+        require(tokensSold >= goal, 'Crowdsale goal has not been met');
+        //Send remaining tokens to crowdsale creator.
         require(token.transfer(owner, token.balanceOf(address(this))));
-        //Send Ether to crowdsale creator
+        //Send Ether to crowdsale creator.
         uint256 value = address(this).balance;
         (bool sent, ) = owner.call{value: value}('');
         require(sent);
 
         emit Finalize(tokensSold, value);
+        } else {
+            _refund();
         }
     }
 }
