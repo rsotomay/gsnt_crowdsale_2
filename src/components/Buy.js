@@ -42,6 +42,7 @@ const Buy = ({
         .connect(signer)
         .buyTokens(formattedAmount, { value: value });
       await transaction.wait();
+
       window.location.reload();
     } catch {
       window.alert("You need to be on the whitelist to buy tokens");

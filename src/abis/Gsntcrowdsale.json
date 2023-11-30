@@ -35,6 +35,11 @@
         "internalType": "uint256",
         "name": "_crowdsaleClosed",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_goal",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
@@ -76,6 +81,25 @@
       }
     ],
     "name": "Finalize",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "ethRefunded",
+        "type": "uint256"
+      }
+    ],
+    "name": "Refund",
     "type": "event"
   },
   {
@@ -135,6 +159,19 @@
     "name": "finalize",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "goal",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -221,6 +258,44 @@
     "outputs": [
       {
         "internalType": "contract Token",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "tokenBalances",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenHolders",
+    "outputs": [
+      {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }

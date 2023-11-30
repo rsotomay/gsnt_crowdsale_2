@@ -37,15 +37,21 @@ describe("Gsntcrowdsale", () => {
       ether(1),
       "1000000",
       tokens(10),
-      tokens(2000),
+      tokens(5000),
       crowdsaleOpened,
-      crowdsaleClosed
+      crowdsaleClosed,
+      tokens(3000)
     );
 
     // Adds address to whitelist
     transaction = await gsntcrowdsale
       .connect(deployer)
       .addToWhitelist(user1.getAddress());
+    result = await transaction.wait();
+
+    transaction = await gsntcrowdsale
+      .connect(deployer)
+      .addToWhitelist(user2.getAddress());
     result = await transaction.wait();
 
     // Sends tokens to crowdsale
@@ -62,12 +68,12 @@ describe("Gsntcrowdsale", () => {
       );
     });
 
-    it("returns the price", async () => {
-      expect(await gsntcrowdsale.price()).to.equal(ether(1));
-    });
-
     it("returns token address", async () => {
       expect(await gsntcrowdsale.token()).to.equal(await token.getAddress());
+    });
+
+    it("returns the price", async () => {
+      expect(await gsntcrowdsale.price()).to.equal(ether(1));
     });
 
     it("returns max tokens", async () => {
@@ -77,12 +83,30 @@ describe("Gsntcrowdsale", () => {
     it("returns the contract's owner", async () => {
       expect(await gsntcrowdsale.owner()).to.equal(await deployer.getAddress());
     });
+
+    it("returns minimum Purchase", async () => {
+      expect(await gsntcrowdsale.minPurchase()).to.equal(tokens(10));
+    });
+
+    it("returns maximum Purchase", async () => {
+      expect(await gsntcrowdsale.maxPurchase()).to.equal(tokens(5000));
+    });
+
+    it("returns crowdsale goal", async () => {
+      expect(await gsntcrowdsale.goal()).to.equal(tokens(3000));
+    });
   });
 
   describe("Adds to whitelist", () => {
     describe("Success", () => {
       it("updates whitelist", async () => {
         expect(await gsntcrowdsale.whitelist(user1)).to.equal(true);
+      });
+
+      it("updates updates token holders ", async () => {
+        expect(await gsntcrowdsale.tokenHolders(0)).to.equal(
+          await user1.getAddress()
+        );
       });
     });
 
@@ -109,6 +133,7 @@ describe("Gsntcrowdsale", () => {
           .buyTokens(amount, { value: ether(10) });
         result = await transaction.wait();
       });
+
       it("Confirms advance timestamp to open crowdsale ", async () => {
         expect(
           await ethers.provider.getBalance(gsntcrowdsale.getAddress())
@@ -119,6 +144,7 @@ describe("Gsntcrowdsale", () => {
         expect(
           await token.balanceOf(await gsntcrowdsale.getAddress())
         ).to.equal(tokens(999990));
+
         expect(await token.balanceOf(await user1.getAddress())).to.equal(
           amount
         );
@@ -135,7 +161,13 @@ describe("Gsntcrowdsale", () => {
       it("update contract's ether balance", async () => {
         expect(
           await ethers.provider.getBalance(gsntcrowdsale.getAddress())
-        ).to.equal(amount);
+        ).to.equal(ether(10));
+      });
+
+      it("updates token balances", async () => {
+        expect(await gsntcrowdsale.tokenBalances(user1.getAddress())).to.equal(
+          amount
+        );
       });
 
       it("updates tokens sold", async () => {
@@ -200,6 +232,7 @@ describe("Gsntcrowdsale", () => {
         let now = await time.latest();
         let crowdsaleOpened = now + 300;
         await time.increaseTo(crowdsaleOpened + 1);
+
         transaction = await user1.sendTransaction({
           to: gsntcrowdsale.getAddress(),
           value: amount,
@@ -210,7 +243,7 @@ describe("Gsntcrowdsale", () => {
       it("Updates contracts ether balance", async () => {
         expect(
           await ethers.provider.getBalance(gsntcrowdsale.getAddress())
-        ).to.equal(amount);
+        ).to.equal(ether(10));
       });
 
       it("updates user token balance", async () => {
@@ -243,34 +276,48 @@ describe("Gsntcrowdsale", () => {
 
   describe("Finalizing Sale", () => {
     let transaction, result;
-    let amount = tokens(10);
-    let value = ether(10);
 
     describe("Success", () => {
+      let amount = tokens(3010);
+      let value = ether(3010);
       beforeEach(async () => {
         let now = await time.latest();
         let crowdsaleOpened = now + 300;
         await time.increaseTo(crowdsaleOpened + 1);
+      });
+
+      it("transfers remaining tokens to owner", async () => {
         transaction = await gsntcrowdsale
           .connect(user1)
           .buyTokens(amount, { value: value });
         result = await transaction.wait();
-      });
 
-      it("transfers remaining tokens to owner", async () => {
         let now = await time.latest();
         let crowdsaleClosed = now + 1000;
         await time.increaseTo(crowdsaleClosed + 1);
+
+        expect(await gsntcrowdsale.tokensSold()).to.equal(tokens(3010));
+
+        expect(
+          await ethers.provider.getBalance(gsntcrowdsale.getAddress())
+        ).to.equal(ether(3010));
 
         transaction = await gsntcrowdsale.connect(deployer).finalize();
         result = await transaction.wait();
 
         expect(await token.balanceOf(gsntcrowdsale.getAddress())).to.equal(0);
+
         expect(await token.balanceOf(deployer.getAddress())).to.equal(
-          tokens(999990)
+          tokens(996990)
         );
       });
+
       it("transfers ETH balance to owner", async () => {
+        transaction = await gsntcrowdsale
+          .connect(user1)
+          .buyTokens(amount, { value: value });
+        result = await transaction.wait();
+
         let now = await time.latest();
         let crowdsaleClosed = now + 1000;
         await time.increaseTo(crowdsaleClosed + 1);
@@ -284,6 +331,11 @@ describe("Gsntcrowdsale", () => {
       });
 
       it("emits a fanilize event", async () => {
+        transaction = await gsntcrowdsale
+          .connect(user1)
+          .buyTokens(amount, { value: value });
+        result = await transaction.wait();
+
         let now = await time.latest();
         let crowdsaleClosed = now + 1000;
         await time.increaseTo(crowdsaleClosed + 1);
@@ -295,10 +347,40 @@ describe("Gsntcrowdsale", () => {
           .to.emit(gsntcrowdsale, "Finalize")
           .withArgs(amount, value);
       });
+
+      it("Refunds eth to user if goal is not met", async () => {
+        let amount = tokens(50);
+        let value = ether(50);
+
+        transaction = await gsntcrowdsale
+          .connect(user1)
+          .buyTokens(amount, { value: value });
+        result = await transaction.wait();
+
+        let now = await time.latest();
+        let crowdsaleClosed = now + 1000;
+        await time.increaseTo(crowdsaleClosed + 1);
+
+        transaction = await gsntcrowdsale.connect(deployer).finalize();
+        result = await transaction.wait();
+
+        expect(
+          await ethers.provider.getBalance(gsntcrowdsale.getAddress())
+        ).to.equal(ether(0));
+
+        await expect(transaction)
+          .to.emit(gsntcrowdsale, "Refund")
+          .withArgs(await user1.getAddress(), value);
+      });
     });
 
     describe("Failure", () => {
+      let transaction, result;
+
       it("prevents non-owner from finalizing", async () => {
+        let now = await time.latest();
+        let crowdsaleClosed = now + 1000;
+        await time.increaseTo(crowdsaleClosed + 1);
         await expect(gsntcrowdsale.connect(user1).finalize()).to.be.reverted;
       });
 

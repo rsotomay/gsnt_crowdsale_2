@@ -13,11 +13,15 @@ contract Gsntcrowdsale {
     uint256 public maxPurchase;
     uint256 public crowdsaleOpened;
     uint256 public crowdsaleClosed;
+    uint256 public goal;
+    address[] public tokenHolders;
 
     event Buy(uint256 amount, address buyer);
     event Finalize(uint256 tokenSold, uint256 etherRaised);
+    event Refund(address to, uint256 ethRefunded);
 
     mapping(address => bool) public whitelist;
+    mapping(address => uint256) public tokenBalances;
 
     constructor(
         Token _token, 
@@ -26,7 +30,8 @@ contract Gsntcrowdsale {
         uint256 _minPurchase,
         uint256 _maxPurchase,
         uint256 _crowdsaleOpened,
-        uint256 _crowdsaleClosed
+        uint256 _crowdsaleClosed,
+        uint256 _goal
         ) {
         token = _token;
         price = _price;
@@ -36,6 +41,7 @@ contract Gsntcrowdsale {
         maxPurchase = _maxPurchase;
         crowdsaleOpened = _crowdsaleOpened;
         crowdsaleClosed = _crowdsaleClosed;
+        goal = _goal;
     }
 
     modifier onlyOwner() {
@@ -55,6 +61,7 @@ contract Gsntcrowdsale {
 
     function addToWhitelist(address _address) public onlyOwner {
         whitelist[_address] = true;
+        tokenHolders.push(_address);
     }
 
     function buyTokens(uint256 _amount) public payable onlyWhitelisted {
@@ -65,6 +72,7 @@ contract Gsntcrowdsale {
         require(_amount <= maxPurchase, 'You cannot buy that many tokens');
         require(msg.value == (_amount / 1e18) * price);
         require(token.transfer(msg.sender, _amount));
+        tokenBalances[msg.sender] += _amount;
 
         tokensSold += _amount;
 
@@ -75,8 +83,30 @@ contract Gsntcrowdsale {
         price = _price;
     }
 
+    function _refund() internal {
+        for(uint256 i = 0; i < tokenHolders.length; i++) {
+            address holder = tokenHolders[i];
+            uint256 balance = tokenBalances[holder];
+            if (balance > 0) {
+                uint256 ethRefundAmount =  balance * price / 1e18;
+                (bool sent, ) = holder.call{value: ethRefundAmount}('');
+                require(sent, "Failed to refund ether");
+                    
+                tokenBalances[holder] = 0;
+
+                emit Refund(holder, ethRefundAmount);
+            }
+        }
+    }
+
     function finalize() public onlyOwner {
         require(block.timestamp > crowdsaleClosed, "Crowdsale has not ended yet");
+        // If goal is not met, refund ether to token holders and transfer tokens 
+        //back to the contract
+        if (goal > tokensSold) {
+            _refund();
+        } else {
+        require(goal <= tokensSold, 'Crowdsale goal has not been met');
         //Send remaining tokens to crowdsale creator
         require(token.transfer(owner, token.balanceOf(address(this))));
         //Send Ether to crowdsale creator
@@ -85,5 +115,6 @@ contract Gsntcrowdsale {
         require(sent);
 
         emit Finalize(tokensSold, value);
+        }
     }
 }

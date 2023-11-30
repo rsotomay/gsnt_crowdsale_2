@@ -14,6 +14,8 @@ const Finalize = ({
       const signer = await provider.getSigner();
       const transaction = await gsntcrowdsale.connect(signer).finalize();
       await transaction.wait();
+
+      window.location.reload();
     } catch {
       window.alert("Crowdsale is not over yet");
     }
@@ -21,7 +23,7 @@ const Finalize = ({
 
   return (
     <div className="d-flex justify-content-end mx-5">
-      {account === owner ? (
+      {account === owner && contractBalance > 0 ? (
         <>
           <div>
             <Button variant="success" type="submit" onClick={finalizeHandler}>

@@ -15,6 +15,7 @@ async function main() {
   const MAX_PURCHASE = ethers.parseUnits("20000", "ether");
   const CROWD_SALE_OPENED = (Date.now() + 180000).toString().slice(0, 10);
   const CROWD_SALE_CLOSED = (Date.now() + 1800000).toString().slice(0, 10);
+  const GOAL = ethers.parseUnits("100000", "ether");
 
   // Deploy Token Contract
   const Token = await hre.ethers.deployContract("Token", [
@@ -34,6 +35,7 @@ async function main() {
     MAX_PURCHASE,
     CROWD_SALE_OPENED,
     CROWD_SALE_CLOSED,
+    GOAL,
   ]);
   await Gsntcrowdsale.waitForDeployment();
   console.log(`Gsntcrowdsale deployed to: ${Gsntcrowdsale.target}\n`);
