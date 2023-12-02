@@ -30,14 +30,14 @@ const Navigation = ({ account, setAccount, token, setAccountBalance }) => {
         height="80"
         className="d-inline-block align-top mx-2"
       />
-      <Navbar.Brand style={{ fontSize: 30 }} href="#">
+      <Navbar.Brand style={{ color: "silver", fontSize: 30 }}>
         GSNT ICO
       </Navbar.Brand>
       <Navbar.Collapse className="d-flex justify-content-end">
         {account ? (
           <Navbar.Text
             className="d-inline-block align-top mx-5"
-            style={{ color: "black", fontSize: 20 }}
+            style={{ color: "silver", fontSize: 20 }}
           >
             {account.slice(0, 5) + "..." + account.slice(38, 42)}
           </Navbar.Text>

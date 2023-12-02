@@ -4,6 +4,7 @@ import Countdown from "react-countdown";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { ethers } from "ethers";
+import crowdsale_background from "../crowdsale_background.png";
 
 //components
 import Navigation from "./Navigation";
@@ -33,6 +34,7 @@ function App() {
   const [contractBalance, setContractBalance] = useState(0);
 
   const [price, setPrice] = useState(0);
+  const [goal, setGoal] = useState(0);
   const [maxTokens, setMaxTokens] = useState(0);
   const [tokensSold, setTokensSold] = useState(0);
 
@@ -85,6 +87,9 @@ function App() {
     // Fetch price
     const price = ethers.formatUnits(await gsntcrowdsale.price(), 18);
     setPrice(price);
+    //Fetch goal
+    const goal = ethers.formatUnits(await gsntcrowdsale.goal(), 18);
+    setGoal(goal);
     // fetch max tokens
     const maxTokens = ethers.formatUnits(await gsntcrowdsale.maxTokens(), 18);
     setMaxTokens(maxTokens);
@@ -102,68 +107,80 @@ function App() {
   }, [isLoading]);
 
   return (
-    <Container>
-      <Navigation
-        account={account}
-        setAccount={setAccount}
-        token={token}
-        accountBalance={accountBalance}
-        setAccountBalance={setAccountBalance}
-      />
-      <Finalize
-        provider={provider}
-        account={account}
-        owner={owner}
-        gsntcrowdsale={gsntcrowdsale}
-        contractBalance={contractBalance}
-      />
+    <div
+      style={{
+        WebkitBackgroundSize: "cover",
+        minHeight: "100vh",
+        backgroundPosition: "bottom",
+        backgroundImage: `url(${crowdsale_background})`,
+      }}
+    >
+      <Container style={{ color: "silver" }}>
+        <Navigation
+          account={account}
+          setAccount={setAccount}
+          token={token}
+          accountBalance={accountBalance}
+          setAccountBalance={setAccountBalance}
+        />
+        <Finalize
+          provider={provider}
+          account={account}
+          owner={owner}
+          gsntcrowdsale={gsntcrowdsale}
+          contractBalance={contractBalance}
+        />
 
-      <h1 className="my-4 text-center">Introducing The GASton Token!</h1>
+        <h1 className="my-4 text-center">Introducing The GASton Token!</h1>
 
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <>
-          <Row className="justify-content-md-center">
-            <Col xs={2}>
-              <p className="my-1 text-center">
-                <strong>Token Sale Starts In:</strong>
-              </p>
-              <div className="my-1 text-center">
-                <Countdown date={parseInt(revealTimeOpens)} className="h4" />
-              </div>
-            </Col>
-            <Col xs={2}>
-              <p className="my-1 text-center">
-                <strong>Time left to buy:</strong>
-              </p>
-              <div className="my-1 text-center">
-                <Countdown date={parseInt(revealTimeCloses)} className="h4" />
-              </div>
-            </Col>
-          </Row>
-          <p className="my-3 text-center">
-            <strong>Current Price:</strong> {price} ETH
-          </p>
-          <Whitelist
-            provider={provider}
-            account={account}
-            gsntcrowdsale={gsntcrowdsale}
-            setIsLoading={setIsLoading}
-            owner={owner}
-          />
-          <Buy
-            provider={provider}
-            price={price}
-            gsntcrowdsale={gsntcrowdsale}
-            setIsLoading={setIsLoading}
-            account={account}
-            accountBalance={accountBalance}
-          />
-          <Progress maxTokens={maxTokens} tokensSold={tokensSold} />
-        </>
-      )}
-    </Container>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <Row className="justify-content-md-center">
+              <Col xs={2}>
+                <p className="my-1 text-center">
+                  <strong>Token Sale Starts In:</strong>
+                </p>
+                <div className="my-1 text-center">
+                  <Countdown date={parseInt(revealTimeOpens)} className="h4" />
+                </div>
+              </Col>
+              <Col xs={2}>
+                <p className="my-1 text-center">
+                  <strong>Time left to buy:</strong>
+                </p>
+                <div className="my-1 text-center">
+                  <Countdown date={parseInt(revealTimeCloses)} className="h4" />
+                </div>
+              </Col>
+            </Row>
+            <p className="my-3 text-center">
+              <strong>Current Price:</strong> {price} ETH
+            </p>
+            <p className="my-3 text-center">
+              <strong>Crowdsale Goal:</strong> {goal} Tokens
+            </p>
+            <Whitelist
+              provider={provider}
+              account={account}
+              gsntcrowdsale={gsntcrowdsale}
+              setIsLoading={setIsLoading}
+              owner={owner}
+            />
+            <Buy
+              provider={provider}
+              price={price}
+              gsntcrowdsale={gsntcrowdsale}
+              setIsLoading={setIsLoading}
+              account={account}
+              accountBalance={accountBalance}
+            />
+            <Progress maxTokens={maxTokens} tokensSold={tokensSold} />
+          </>
+        )}
+      </Container>
+    </div>
   );
 }
 export default App;
