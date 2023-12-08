@@ -26,6 +26,7 @@ function App() {
   const [token, setToken] = useState(null);
   const [gsntcrowdsale, setGsntcrowdsale] = useState(null);
   const [owner, setOwner] = useState(null);
+  const [whitelisted, setWhitelisted] = useState(false);
 
   const [account, setAccount] = useState(null);
   const [revealTimeOpens, setRevealTimeOpens] = useState(0);
@@ -68,6 +69,7 @@ function App() {
       setAccount(account);
     });
 
+    //Fetch crowdsale contract owner
     setOwner(await gsntcrowdsale.owner());
 
     const contractBalance = ethers.formatUnits(
@@ -122,6 +124,8 @@ function App() {
           token={token}
           accountBalance={accountBalance}
           setAccountBalance={setAccountBalance}
+          gsntcrowdsale={gsntcrowdsale}
+          setWhitelisted={setWhitelisted}
         />
         <Finalize
           provider={provider}
@@ -175,6 +179,7 @@ function App() {
               setIsLoading={setIsLoading}
               account={account}
               accountBalance={accountBalance}
+              whitelisted={whitelisted}
             />
             <Progress maxTokens={maxTokens} tokensSold={tokensSold} />
           </>

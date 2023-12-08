@@ -33,7 +33,7 @@ const Whitelist = ({
       window.alert("Address has been added to whitlist");
       window.location.reload();
     } catch {
-      window.alert("User rejected or transaction reverted");
+      window.alert("Address was not added to withelist");
     }
 
     setIsLoading(true);

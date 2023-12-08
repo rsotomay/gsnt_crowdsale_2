@@ -4,9 +4,16 @@ import Button from "react-bootstrap/Button";
 
 import logo from "../logo_GSNT.png";
 
-const Navigation = ({ account, setAccount, token, setAccountBalance }) => {
+const Navigation = ({
+  account,
+  setAccount,
+  token,
+  setAccountBalance,
+  gsntcrowdsale,
+  setWhitelisted,
+}) => {
   const connectHandler = async () => {
-    // fetch accounts
+    // Fetch accounts
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
@@ -14,7 +21,10 @@ const Navigation = ({ account, setAccount, token, setAccountBalance }) => {
     const account = ethers.getAddress(accounts[0]);
     setAccount(account);
 
-    //fetch account balance
+    //Fetch whietlisted accounts
+    setWhitelisted(await gsntcrowdsale.whitelisted(account));
+
+    //Fetch account balance
     const accountBalance = ethers.formatUnits(
       await token.balanceOf(account),
       18

@@ -15,9 +15,11 @@ const Buy = ({
   setIsLoading,
   account,
   accountBalance,
+  whitelisted,
 }) => {
   const [amount, setAmount] = useState("0");
   const [isWaiting, setIsWaiting] = useState(false);
+  // const [whitelisted, setWhitelisted] = useState(false);
 
   const buyHandler = async (e) => {
     e.preventDefault();
@@ -26,10 +28,17 @@ const Buy = ({
       window.alert("Please connect your waller");
       return;
     }
+
     if (!amount) {
       window.alert("Please enter purchase amount");
       return;
     }
+
+    if (whitelisted === false) {
+      window.alert("You need to be on the whitelist to buy tokens");
+      return;
+    }
+
     setIsWaiting(true);
 
     try {
@@ -45,12 +54,13 @@ const Buy = ({
 
       window.location.reload();
     } catch {
-      window.alert("You need to be on the whitelist to buy tokens");
+      window.alert("Crowdsale has not started yet");
       window.location.reload();
     }
 
     setIsLoading(true);
   };
+  console.log(whitelisted);
 
   return (
     <Form

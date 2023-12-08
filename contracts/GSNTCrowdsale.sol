@@ -54,6 +54,10 @@ contract Gsntcrowdsale {
         _;
     }
 
+    function whitelisted (address _address) public view returns (bool) {
+       return whitelist[_address];
+    }
+
     receive() external payable {
         uint256 amount = msg.value / price;
         buyTokens(amount * 1e18);
