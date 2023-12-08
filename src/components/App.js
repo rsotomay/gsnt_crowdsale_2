@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 import { ethers } from "ethers";
 import crowdsale_background from "../crowdsale_background.png";
 
-//components
+//Components
 import Navigation from "./Navigation";
 import Loading from "./Loading";
 import Progress from "./Progress";
@@ -18,7 +18,7 @@ import Finalize from "./Finalize";
 import TOKEN_ABI from "../abis/Token.json";
 import GSNTCROWDSALE_ABI from "../abis/Gsntcrowdsale.json";
 
-//config
+//Config
 import config from "../config.json";
 
 function App() {
@@ -92,10 +92,10 @@ function App() {
     //Fetch goal
     const goal = ethers.formatUnits(await gsntcrowdsale.goal(), 18);
     setGoal(goal);
-    // fetch max tokens
+    // Fetch max tokens
     const maxTokens = ethers.formatUnits(await gsntcrowdsale.maxTokens(), 18);
     setMaxTokens(maxTokens);
-    // fetch tokens sold
+    // Fetch tokens sold
     const tokensSold = ethers.formatUnits(await gsntcrowdsale.tokensSold(), 18);
     setTokensSold(tokensSold);
 

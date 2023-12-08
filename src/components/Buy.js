@@ -19,7 +19,6 @@ const Buy = ({
 }) => {
   const [amount, setAmount] = useState("0");
   const [isWaiting, setIsWaiting] = useState(false);
-  // const [whitelisted, setWhitelisted] = useState(false);
 
   const buyHandler = async (e) => {
     e.preventDefault();
@@ -43,7 +42,7 @@ const Buy = ({
 
     try {
       const signer = await provider.getSigner();
-      // We need to calculate the required ETH in order to buy the tokens...
+      // Calculate the required ETH in order to buy the tokens...
       const value = ethers.parseUnits((amount * price).toString(), "ether");
       const formattedAmount = ethers.parseUnits(amount.toString(), "ether");
 
@@ -51,7 +50,6 @@ const Buy = ({
         .connect(signer)
         .buyTokens(formattedAmount, { value: value });
       await transaction.wait();
-
       window.location.reload();
     } catch {
       window.alert("Crowdsale has not started yet");
@@ -60,7 +58,6 @@ const Buy = ({
 
     setIsLoading(true);
   };
-  console.log(whitelisted);
 
   return (
     <Form
