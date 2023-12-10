@@ -38,6 +38,8 @@ function App() {
   const [goal, setGoal] = useState(0);
   const [maxTokens, setMaxTokens] = useState(0);
   const [tokensSold, setTokensSold] = useState(0);
+  const [minPurchase, setMinPurchase] = useState("0");
+  const [maxPurchase, setMaxPurchase] = useState("0");
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -77,15 +79,18 @@ function App() {
       18
     );
     setContractBalance(contractBalance);
-
+    //Fetch minimum purchase
+    const minPurchase = await gsntcrowdsale.minPurchase();
+    setMinPurchase(minPurchase);
+    // Fetch maximum purchase
+    const maxPurchase = await gsntcrowdsale.maxPurchase();
+    setMaxPurchase(maxPurchase);
     //Fetch Countdown to crowdsaleOpened
     const crowdsaleOpens = await gsntcrowdsale.crowdsaleOpened();
     setRevealTimeOpens(crowdsaleOpens.toString() + "000");
-
     //Fetch Countdown to crowdsaleClosed
     const crowdsaleCloses = await gsntcrowdsale.crowdsaleClosed();
     setRevealTimeCloses(crowdsaleCloses.toString() + "000");
-
     // Fetch price
     const price = ethers.formatUnits(await gsntcrowdsale.price(), 18);
     setPrice(price);
@@ -180,6 +185,9 @@ function App() {
               account={account}
               accountBalance={accountBalance}
               whitelisted={whitelisted}
+              revealTimeCloses={revealTimeCloses}
+              minPurchase={minPurchase}
+              maxPurchase={maxPurchase}
             />
             <Progress maxTokens={maxTokens} tokensSold={tokensSold} />
           </>

@@ -21,15 +21,15 @@ const Navigation = ({
     const account = ethers.getAddress(accounts[0]);
     setAccount(account);
 
-    //Fetch whietlisted accounts
-    setWhitelisted(await gsntcrowdsale.whitelisted(account));
-
     //Fetch account balance
     const accountBalance = ethers.formatUnits(
       await token.balanceOf(account),
       18
     );
     setAccountBalance(accountBalance);
+
+    //Fetch whietlisted accounts
+    setWhitelisted(await gsntcrowdsale.whitelisted(account));
   };
   return (
     <Navbar>

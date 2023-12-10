@@ -16,6 +16,9 @@ const Buy = ({
   account,
   accountBalance,
   whitelisted,
+  revealTimeCloses,
+  minPurchase,
+  maxPurchase,
 }) => {
   const [amount, setAmount] = useState("0");
   const [isWaiting, setIsWaiting] = useState(false);
@@ -33,8 +36,21 @@ const Buy = ({
       return;
     }
 
+    if (minPurchase > ethers.parseUnits(amount)) {
+      window.alert("You have to buy more tokens");
+      return;
+    } else if (maxPurchase < ethers.parseUnits(amount)) {
+      window.alert("You can't buy that many tokens");
+      return;
+    }
+
     if (whitelisted === false) {
       window.alert("You need to be on the whitelist to buy tokens");
+      return;
+    }
+
+    if (Date.now() > revealTimeCloses) {
+      window.alert("The crowdsale is over");
       return;
     }
 
@@ -58,7 +74,9 @@ const Buy = ({
 
     setIsLoading(true);
   };
-
+  console.log(amount);
+  console.log(minPurchase);
+  console.log(maxPurchase);
   return (
     <Form
       onSubmit={buyHandler}
