@@ -64,6 +64,7 @@ contract Gsntcrowdsale {
     }
 
     function addToWhitelist(address _address) public onlyOwner {
+        require(whitelist[_address] == false, "Address already listed");
         whitelist[_address] = true;
         tokenHolders.push(_address);
     }

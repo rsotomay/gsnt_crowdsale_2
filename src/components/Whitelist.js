@@ -22,6 +22,7 @@ const Whitelist = ({
       window.alert("Add the address you wish to add to whitelist");
       return;
     }
+
     setIsWaiting(true);
 
     try {
@@ -33,7 +34,8 @@ const Whitelist = ({
       window.alert("Address has been added to whitlist");
       window.location.reload();
     } catch {
-      window.alert("Address was not added to withelist");
+      window.alert("Address is already on the whitelist");
+      window.location.reload();
     }
 
     setIsLoading(true);

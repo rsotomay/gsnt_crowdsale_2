@@ -74,9 +74,7 @@ const Buy = ({
 
     setIsLoading(true);
   };
-  console.log(amount);
-  console.log(minPurchase);
-  console.log(maxPurchase);
+
   return (
     <Form
       onSubmit={buyHandler}
