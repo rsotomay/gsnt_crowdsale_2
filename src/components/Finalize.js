@@ -2,8 +2,8 @@ import Button from "react-bootstrap/Button";
 
 const Finalize = ({
   provider,
-  owner,
   account,
+  owner,
   gsntcrowdsale,
   contractBalance,
 }) => {

@@ -28,9 +28,10 @@ const Navigation = ({
     );
     setAccountBalance(accountBalance);
 
-    //Fetch whietlisted accounts
+    // Fetch whietlisted accounts
     setWhitelisted(await gsntcrowdsale.whitelisted(account));
   };
+
   return (
     <Navbar>
       <img

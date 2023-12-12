@@ -5,23 +5,17 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { ethers } from "ethers";
 import crowdsale_background from "../crowdsale_background.png";
-
-//Components
 import Navigation from "./Navigation";
 import Loading from "./Loading";
 import Progress from "./Progress";
 import Whitelist from "./Whitelist";
 import Buy from "./Buy";
 import Finalize from "./Finalize";
-
-//Abis
 import TOKEN_ABI from "../abis/Token.json";
 import GSNTCROWDSALE_ABI from "../abis/Gsntcrowdsale.json";
-
-//Config
 import config from "../config.json";
 
-function App() {
+export function App() {
   const [provider, setProvider] = useState(null);
   const [token, setToken] = useState(null);
   const [gsntcrowdsale, setGsntcrowdsale] = useState(null);
@@ -38,9 +32,8 @@ function App() {
   const [goal, setGoal] = useState(0);
   const [maxTokens, setMaxTokens] = useState(0);
   const [tokensSold, setTokensSold] = useState(0);
-  const [minPurchase, setMinPurchase] = useState("0");
-  const [maxPurchase, setMaxPurchase] = useState("0");
-
+  // const [minPurchase, setMinPurchase] = useState("0");
+  // const [maxPurchase, setMaxPurchase] = useState("0");
   const [isLoading, setIsLoading] = useState(true);
 
   const loadBlockchainData = async () => {
@@ -80,11 +73,11 @@ function App() {
     );
     setContractBalance(contractBalance);
     //Fetch minimum purchase
-    const minPurchase = await gsntcrowdsale.minPurchase();
-    setMinPurchase(minPurchase);
+    // const minPurchase = await gsntcrowdsale.minPurchase();
+    // setMinPurchase(minPurchase);
     // Fetch maximum purchase
-    const maxPurchase = await gsntcrowdsale.maxPurchase();
-    setMaxPurchase(maxPurchase);
+    // const maxPurchase = await gsntcrowdsale.maxPurchase();
+    // setMaxPurchase(maxPurchase);
     //Fetch Countdown to crowdsaleOpened
     const crowdsaleOpens = await gsntcrowdsale.crowdsaleOpened();
     setRevealTimeOpens(crowdsaleOpens.toString() + "000");
@@ -127,6 +120,7 @@ function App() {
           account={account}
           setAccount={setAccount}
           token={token}
+          accountBalance={accountBalance}
           setAccountBalance={setAccountBalance}
           gsntcrowdsale={gsntcrowdsale}
           setWhitelisted={setWhitelisted}
@@ -184,9 +178,6 @@ function App() {
               account={account}
               accountBalance={accountBalance}
               whitelisted={whitelisted}
-              revealTimeCloses={revealTimeCloses}
-              minPurchase={minPurchase}
-              maxPurchase={maxPurchase}
             />
             <Progress maxTokens={maxTokens} tokensSold={tokensSold} />
           </>
@@ -195,4 +186,3 @@ function App() {
     </div>
   );
 }
-export default App;
