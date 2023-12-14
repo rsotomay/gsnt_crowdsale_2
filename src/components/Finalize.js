@@ -18,6 +18,8 @@ const Finalize = ({
       window.location.reload();
     } catch {
       window.alert("Crowdsale is not over yet");
+
+      window.location.reload();
     }
   };
 

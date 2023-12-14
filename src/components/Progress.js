@@ -2,7 +2,7 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 
 const Progress = ({ tokensSold, maxTokens }) => {
   return (
-    <div className="my-3" style={{ color: "silver" }}>
+    <div className="my-3" style={{ color: "white" }}>
       <ProgressBar
         now={(tokensSold / maxTokens) * 100}
         label={`${(tokensSold / maxTokens) * 100}%`}
