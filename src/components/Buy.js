@@ -19,6 +19,8 @@ const Buy = ({
   revealTimeCloses,
   minPurchase,
   maxPurchase,
+  tokensSold,
+  maxTokens,
 }) => {
   const [amount, setAmount] = useState("0");
   const [isWaiting, setIsWaiting] = useState(false);
@@ -46,6 +48,11 @@ const Buy = ({
 
     if (whitelisted === false) {
       window.alert("You need to be on the whitelist to buy tokens");
+      return;
+    }
+
+    if (ethers.parseUnits(tokensSold) === ethers.parseUnits(maxTokens)) {
+      window.alert("Tokes are sold out");
       return;
     }
 

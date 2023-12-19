@@ -187,6 +187,8 @@ function App() {
               revealTimeCloses={revealTimeCloses}
               minPurchase={minPurchase}
               maxPurchase={maxPurchase}
+              tokensSold={tokensSold}
+              maxTokens={maxTokens}
             />
             <Progress maxTokens={maxTokens} tokensSold={tokensSold} />
           </>
