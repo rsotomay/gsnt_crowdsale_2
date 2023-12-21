@@ -103,7 +103,7 @@ describe("Gsntcrowdsale", () => {
         expect(await gsntcrowdsale.whitelist(user1)).to.equal(true);
       });
 
-      it("updates updates token holders ", async () => {
+      it("updates token holders ", async () => {
         expect(await gsntcrowdsale.tokenHolders(0)).to.equal(
           await user1.getAddress()
         );
@@ -115,6 +115,12 @@ describe("Gsntcrowdsale", () => {
         await expect(gsntcrowdsale.connect(user1).addToWhitelist(user1)).to.be
           .reverted;
       });
+    });
+  });
+
+  describe("Whitelisted", () => {
+    it("returns whitelisted", async () => {
+      expect(await gsntcrowdsale.whitelisted(user1)).to.equal(true);
     });
   });
 
