@@ -39,7 +39,7 @@ const Buy = ({
     }
 
     if (minPurchase > ethers.parseUnits(amount)) {
-      window.alert("You have to buy more tokens");
+      window.alert("Minimum purchase is 10 tokens");
       return;
     } else if (maxPurchase < ethers.parseUnits(amount)) {
       window.alert("You can't buy that many tokens");
@@ -52,7 +52,7 @@ const Buy = ({
     }
 
     if (ethers.parseUnits(tokensSold) === ethers.parseUnits(maxTokens)) {
-      window.alert("Tokes are sold out");
+      window.alert("Tokens are sold out");
       return;
     }
 
